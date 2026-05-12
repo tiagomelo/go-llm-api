@@ -116,7 +116,6 @@ You should see frames trickle in one at a time. The `-N` flag is essential — w
 ├── validate/                 # Request validation helpers
 ├── web/                      # JSON request/response helpers
 ├── doc/                      # Swagger annotations + generated spec
-├── mobile/                   # SwiftUI iOS demo app (XcodeGen-managed)
 ├── docker-compose.yml        # Ollama service
 ├── Makefile
 └── .env
