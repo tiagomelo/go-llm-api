@@ -4,6 +4,8 @@ A small Go REST API that wraps a local [Ollama](https://ollama.com) instance and
 
 Built on top of [`tiagomelo/go-templates/example-rest-api`](https://github.com/tiagomelo/go-templates/tree/main/example-rest-api), which provides the routing, structured logging, middleware, graceful shutdown, and Swagger plumbing.
 
+> Walkthrough article: [*Building a streaming LLM API in Go with Ollama — and watching it run from a SwiftUI iOS app*](https://tiagomelo.info/golang/ollama/llm/streaming/ios/2026/05/11/go-llm-api-streaming.html) 
+
 ---
 
 ## Architecture
