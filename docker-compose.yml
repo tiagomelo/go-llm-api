@@ -1,0 +1,18 @@
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ${OLLAMA_CONTAINER_NAME}
+    ports:
+      - "${OLLAMA_PORT}:${OLLAMA_PORT}"
+    volumes:
+      - ollama-data:/root/.ollama
+    networks:
+      - observability
+
+volumes:
+  ollama-data:
+
+networks:
+  observability:
+    driver: bridge
+    name: ${DOCKER_NETWORK_NAME}

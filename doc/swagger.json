@@ -1,0 +1,307 @@
+{
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "swagger": "2.0",
+  "info": {
+    "description": "A sample RESTful API for interacting with large language models.",
+    "title": "Go LLM API",
+    "contact": {
+      "name": "Tiago Melo",
+      "email": "tiagoharris@gmail.com"
+    },
+    "version": "0.0.1"
+  },
+  "paths": {
+    "/api/v1/generate": {
+      "post": {
+        "tags": [
+          "generate"
+        ],
+        "summary": "Generate text based on the provided model, prompt, and context.",
+        "operationId": "Generate",
+        "parameters": [
+          {
+            "name": "Body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/GenerateRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/responses/generateResponse"
+          },
+          "400": {
+            "description": " bad request"
+          },
+          "500": {
+            "description": " internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/generate/stream": {
+      "post": {
+        "description": "Each event is formatted as:\n\n`data: {\"response\":\"token\",\"done\":false}`\n\nFinal event:\n\n`event: done`\n`data: {\"done\":true}`",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "text/event-stream"
+        ],
+        "tags": [
+          "generate"
+        ],
+        "summary": "Stream generated text using Server-Sent Events (SSE).",
+        "operationId": "GenerateStream",
+        "parameters": [
+          {
+            "name": "Body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/GenerateRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": " SSE stream of generated tokens"
+          },
+          "400": {
+            "description": " bad request"
+          },
+          "500": {
+            "description": " internal server error"
+          }
+        }
+      }
+    },
+    "/api/v1/models": {
+      "get": {
+        "tags": [
+          "models"
+        ],
+        "summary": "Get all available models.",
+        "operationId": "GetModels",
+        "responses": {
+          "200": {
+            "$ref": "#/responses/getModelsResponse"
+          },
+          "500": {
+            "description": " internal server error"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Details": {
+      "type": "object",
+      "properties": {
+        "families": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "x-go-name": "Families",
+          "example": [
+            "llama"
+          ]
+        },
+        "family": {
+          "type": "string",
+          "x-go-name": "Family",
+          "example": "llama"
+        },
+        "format": {
+          "type": "string",
+          "x-go-name": "Format",
+          "example": "gguf"
+        },
+        "parameter_size": {
+          "type": "string",
+          "x-go-name": "ParameterSize",
+          "example": "1.2B"
+        },
+        "quantization_level": {
+          "type": "string",
+          "x-go-name": "QuantizationLevel",
+          "example": "Q8_0"
+        }
+      },
+      "x-go-package": "github.com/tiagomelo/go-llm-api/doc"
+    },
+    "GenerateRequest": {
+      "type": "object",
+      "required": [
+        "model",
+        "prompt"
+      ],
+      "properties": {
+        "context": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "x-go-name": "Context",
+          "example": [
+            128006,
+            9125
+          ]
+        },
+        "model": {
+          "type": "string",
+          "x-go-name": "Model",
+          "example": "llama3.2:1b"
+        },
+        "prompt": {
+          "type": "string",
+          "x-go-name": "Prompt",
+          "example": "hi"
+        }
+      },
+      "x-go-package": "github.com/tiagomelo/go-llm-api/doc"
+    },
+    "GenerateResponse": {
+      "type": "object",
+      "properties": {
+        "context": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "x-go-name": "Context",
+          "example": [
+            128006,
+            9125,
+            128007,
+            271
+          ]
+        },
+        "done": {
+          "type": "boolean",
+          "x-go-name": "Done",
+          "example": true
+        },
+        "done_reason": {
+          "type": "string",
+          "x-go-name": "DoneReason",
+          "example": "stop"
+        },
+        "eval_count": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "EvalCount",
+          "example": 8
+        },
+        "eval_duration": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "EvalDuration",
+          "example": 459100459
+        },
+        "load_duration": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "LoadDuration",
+          "example": 1300497293
+        },
+        "prompt_eval_count": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "PromptEvalCount",
+          "example": 26
+        },
+        "prompt_eval_duration": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "PromptEvalDuration",
+          "example": 455812958
+        },
+        "response": {
+          "type": "string",
+          "x-go-name": "Response",
+          "example": "How can I help you today?"
+        },
+        "total_duration": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "TotalDuration",
+          "example": 2220439376
+        }
+      },
+      "x-go-package": "github.com/tiagomelo/go-llm-api/doc"
+    },
+    "GetModelsResponse": {
+      "type": "object",
+      "properties": {
+        "models": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Model"
+          },
+          "x-go-name": "Models"
+        }
+      },
+      "x-go-package": "github.com/tiagomelo/go-llm-api/doc"
+    },
+    "Model": {
+      "type": "object",
+      "properties": {
+        "details": {
+          "$ref": "#/definitions/Details"
+        },
+        "digest": {
+          "type": "string",
+          "x-go-name": "Digest",
+          "example": "baf6a787fdffd633537aa2eb51cfd54cb93ff08e28040095462bb63daf552878"
+        },
+        "model": {
+          "type": "string",
+          "x-go-name": "Model",
+          "example": "llama3.2:1b"
+        },
+        "modified_at": {
+          "type": "string",
+          "x-go-name": "ModifiedAt",
+          "example": "2026-04-28T11:38:38.445479013Z"
+        },
+        "name": {
+          "type": "string",
+          "x-go-name": "Name",
+          "example": "llama3.2:1b"
+        },
+        "size": {
+          "type": "integer",
+          "format": "int64",
+          "x-go-name": "Size",
+          "example": 1321098329
+        }
+      },
+      "x-go-package": "github.com/tiagomelo/go-llm-api/doc"
+    }
+  },
+  "responses": {
+    "generateResponse": {
+      "description": "",
+      "schema": {
+        "$ref": "#/definitions/GenerateResponse"
+      }
+    },
+    "getModelsResponse": {
+      "description": "",
+      "schema": {
+        "$ref": "#/definitions/GetModelsResponse"
+      }
+    }
+  }
+}
