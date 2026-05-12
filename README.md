@@ -1,3 +1,5 @@
+[![CI](https://github.com/tiagomelo/go-llm-api/actions/workflows/ci.yml/badge.svg)](https://github.com/tiagomelo/go-llm-api/actions/workflows/ci.yml) [![Go Reference](https://pkg.go.dev/badge/github.com/tiagomelo/go-llm-api.svg)](https://pkg.go.dev/github.com/tiagomelo/go-llm-api)
+
 # go-llm-api
 
 A small Go REST API that wraps a local [Ollama](https://ollama.com) instance and exposes it through a clean, versioned HTTP interface — including a **token-by-token streaming endpoint** over Server-Sent Events.
